@@ -13,13 +13,13 @@
 			
 			<form>
 				<label for="js-input">Is the latest...</label>
-				<input id="js-input" type="text" name="js-input">
+				<input id="js-input" type="text" name="js-input" required>
 				<button id="js-search" type="submit">Out Yet?</button>
 			</form>
 
 	</header>
 
-	<div id="js-results" hidden>
+	<div id="js-results" aria-live="assertive" hidden>
 		
 	</div>
 
