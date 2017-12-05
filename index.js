@@ -120,7 +120,7 @@ function handleSubmitButton() {
 
 		$('#js-results').removeClass('flex-direction-column');
 
-		const endpointURL = 'http://api.tvmaze.com/search/shows';
+		const endpointURL = 'https://api.tvmaze.com/search/shows';
 
 		const searchField = $(this).siblings('#js-input');
 		const userInput = searchField.val();
