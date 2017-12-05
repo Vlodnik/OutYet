@@ -79,9 +79,13 @@ function renderSearchResults(data) {
 }
 
 function findShowData(data) {
-	const endpointURL = `${ data[0].show._links.previousepisode.href }`;
+	const endpointHTTP = `${ data[0].show._links.previousepisode.href }`;
+	let URLArray = endpointHTTP.split('');
+	URLArray.splice(4, 0, 's');
 
-	$.getJSON(endpointURL, displayShowData);
+	const endpointHTTPS = URLArray.join('');
+
+	$.getJSON(endpointHTTPS, displayShowData);
 }
 
 function displayShowData(data) {
