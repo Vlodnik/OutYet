@@ -137,7 +137,7 @@ function handleConfirmButton() {
 
 		console.log('handleConfirmButton ran'); // testing
 
-		const endpointURL = 'http://api.tvmaze.com/search/shows';
+		const endpointURL = 'https://api.tvmaze.com/search/shows';
 
 		const userInput = $(this).siblings('h2').text();
 
