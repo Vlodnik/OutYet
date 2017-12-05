@@ -1,11 +1,29 @@
 'use strict'
 
-function getDataFromApi(endpointURL, userInput, callback) {
+function getDataFromTVMaze(endpointURL, userInput, callback) {
 	const searchObject = {
 		q: `${ userInput }`
 	};
 
 	$.getJSON(endpointURL, searchObject, callback);
+}
+
+function getDataFromTasteDive(endpointURL, userInput, callback) {
+	const searchObject = {
+		url: endpointURL,
+		jsonp: 'callback',
+		dataType: 'jsonp',
+		data: {
+			k: 'dev key',
+			q: userInput,
+			type: 'shows',
+			info: 1,
+			limit: 5
+		},
+		success: callback
+	}
+
+	$.ajax(searchObject);
 }
 
 function displaySearchData(data) {
@@ -75,7 +93,8 @@ function displayShowData(data) {
 	const results = `
 		<p>The last episode was ${ name }!</p>
 		<p>It was episode ${ number } of season ${ season }.</p>
-		<p>It aired ${ airdate }</p>
+		<p>It aired ${ airdate }.</p>
+		<button id="js-recs" type="submit" hidden>Get recommendations?</button>
 	`;
 
 	const resultsDiv = $('#js-results');
@@ -84,11 +103,22 @@ function displayShowData(data) {
 	resultsDiv.addClass('flex-direction-column');
 }
 
+function displayRecsData(data) {
+	console.log('displayRecsData ran') // testing
+	console.log(data);
+	// this function needs to add the suggested
+	// tv shows to the DOM. it should add the 
+	// name of each show
+
+}
+
 function handleSubmitButton() {
 	$('#js-search').click(function(event) {
 		event.preventDefault();
 
 		console.log('handleSubmitButton ran'); // testing
+
+		$('#js-results').removeClass('flex-direction-column');
 
 		const endpointURL = 'http://api.tvmaze.com/search/shows';
 
@@ -97,7 +127,7 @@ function handleSubmitButton() {
 
 		searchField.val('');
 
-		getDataFromApi(endpointURL, userInput, displaySearchData);
+		getDataFromTVMaze(endpointURL, userInput, displaySearchData);
 	});
 }
 
@@ -116,7 +146,7 @@ function handleConfirmButton() {
 		parentSection.siblings('section').remove();
 		$(this).remove();
 
-		getDataFromApi(endpointURL, userInput, findShowData);
+		getDataFromTVMaze(endpointURL, userInput, findShowData);
 	});
 }
 
@@ -127,11 +157,28 @@ function handleRetryButton() {
 		$('#js-results').html('');
 	});
 }
+
+function handleRecsButton() {
+	$('#js-results').on('click', '#js-recs', function(event) {
+		event.preventDefault();
+
+		console.log('handleRecsButton ran'); // testing
+
+		const endpointURL = 'https://tastedive.com/api/similar';
+
+		const parentSection = $(this).siblings('section');
+		const userInput = parentSection.find('h2').text();
+		console.log(userInput);
+
+		getDataFromTasteDive(endpointURL, userInput, displayRecsData);
+	});
+}
  
 function handleButtons() {
 	handleSubmitButton();
 	handleConfirmButton();
 	handleRetryButton();
+	handleRecsButton();
 }
 
 handleButtons();
