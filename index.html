@@ -4,16 +4,19 @@
 	<title>OutYet</title>
 
 	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
 	<meta name="description" content="Find the most recent episode of a show. Then get recommendations for more!">
+	<link rel="stylesheet" type="text/css" href="normalize.css">
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="index.css">
 </head>
 <body>
 	<header>
-			<h1>Check for updates on your favorite TV shows.</h1>
+			<h1>Check for<br>updates on <br>your <span>favorite<br>TV shows.</span></h1>
 			
 			<form>
 				<label for="js-input">Is the latest...</label>
-				<input id="js-input" type="text" name="js-input" required>
+				<input id="js-input" type="text" name="js-input" required placeholder="Search for a show!">
 				<button id="js-search" type="submit">Out Yet?</button>
 			</form>
 

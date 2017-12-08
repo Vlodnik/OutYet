@@ -14,7 +14,7 @@ function getDataFromTasteDive(endpointURL, userInput, callback) {
 		jsonp: 'callback',
 		dataType: 'jsonp',
 		data: {
-			k: 'dev key',
+			k: '292374-OutYet-Q9UHLJJC',
 			q: userInput,
 			type: 'shows',
 			info: 1,
@@ -27,8 +27,6 @@ function getDataFromTasteDive(endpointURL, userInput, callback) {
 }
 
 function displaySearchData(data) {
-	console.log(data); // testing
-
 	const results = data.map(item => renderSearchResults(item));
 
 	const resultsDiv = $('#js-results');
@@ -78,6 +76,10 @@ function renderSearchResults(data) {
 	}
 }
 
+function scrollToResults() {
+	$('html').animate({scrollTop: $('#js-results').offset().top});
+}
+
 function findShowData(data) {
 	const endpointHTTP = `${ data[0].show._links.previousepisode.href }`;
 	let URLArray = endpointHTTP.split('');
@@ -89,27 +91,24 @@ function findShowData(data) {
 }
 
 function displayShowData(data) {
-	console.log('displayShowData ran'); // testing
-	console.log(data); // testing
-
 	const {name, number, season, airdate} = data;
 
 	const results = `
 		<p>The last episode was ${ name }!</p>
 		<p>It was episode ${ number } of season ${ season }.</p>
 		<p>It aired ${ airdate }.</p>
-		<button id="js-recs" type="submit" hidden>Get recommendations?</button>
+		<button id="js-recs" type="submit">Get recommendations?</button>
 	`;
 
-	const resultsDiv = $('#js-results');
+	const resultsSection = $('.result-show');
 
-	resultsDiv.append(results);
-	resultsDiv.addClass('flex-direction-column');
+	resultsSection.append(results);
 }
 
 function displayRecsData(data) {
-	console.log('displayRecsData ran') // testing
-	console.log(data);
+	const recsArray = data.Similar.Results;
+
+
 	// this function needs to add the suggested
 	// tv shows to the DOM. it should add the 
 	// name of each show
@@ -132,6 +131,7 @@ function handleSubmitButton() {
 		searchField.val('');
 
 		getDataFromTVMaze(endpointURL, userInput, displaySearchData);
+		scrollToResults();
 	});
 }
 
@@ -170,19 +170,33 @@ function handleRecsButton() {
 
 		const endpointURL = 'https://tastedive.com/api/similar';
 
-		const parentSection = $(this).siblings('section');
-		const userInput = parentSection.find('h2').text();
+		const showName = $(this).siblings('h2');
+		const userInput = showName.text();
 		console.log(userInput);
 
 		getDataFromTasteDive(endpointURL, userInput, displayRecsData);
 	});
 }
- 
+
+const searchEx = ['Brooklyn 99', 'The Americans', 'Last Week Tonight', 'Game of Thrones', 'RuPaul\'s Drag Race', 'The Flash', 'Insecure', 'Black Mirror', 'The Good Place', 'Bob\'s Burgers'];
+setInterval(function() {
+	if('js-input' !== document.activeElement.id) {
+		$('#js-input').attr('placeholder', searchEx[searchEx.push(searchEx.shift())-1]);
+	}
+}, 3000);
+
+function handlePlaceholderText() {
+	$('#js-input').focus(function(event) {
+		$(this).attr('placeholder', '');
+	});
+}
+
 function handleButtons() {
 	handleSubmitButton();
 	handleConfirmButton();
 	handleRetryButton();
 	handleRecsButton();
+	handlePlaceholderText();
 }
 
 handleButtons();

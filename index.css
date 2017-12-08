@@ -1,6 +1,7 @@
 html body * {
 	box-sizing: border-box;
-	/*border: 2px solid red;*/
+	font-family: Montserrat;
+	/*border: 1px solid red;*/
 }
 
 #js-results {
@@ -12,6 +13,120 @@ html body * {
 	flex-direction: column;
 }
 
-.flex-direction-column {
+header {
+	height: -webkit-fill-available;
+	/*background-image: url(https://davina-diaries-7jkaizw9lep2iaf6od7zdyieys8em.netdna-ssl.com/wp-content/uploads/2016/07/o-WATCHING-TV-facebook.jpg);*/
+	background:
+  linear-gradient(
+   to bottom,
+   rgba(255, 255, 255, 0.8),
+   rgba(255, 255, 255, 0)
+  ),url('http://static.adweek.com/adweek.com-prod/wp-content/uploads/files/2016_Jan/watching-tv-hed-2016.png');	
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: 60%;
+	padding-left: 2em;
+	padding-right: 2em;
+}
+
+form {
+	display: flex;
 	flex-direction: column;
+	padding-left: 1.5em;
+	padding-right: 1.5em;
+	margin-top: 4.5em;
+}
+
+h1 {
+	font-weight: 400;
+	margin-top: 0;
+	padding-top: 2em;
+	padding-bottom: 0;
+}
+
+h1 span {
+	font-weight: 700;
+}
+
+form label, form input, form button {
+	font-size: 1.4em;
+	margin-bottom: 1em;
+}
+
+form input {
+	font-weight: 700;
+	background-color: rgba(255, 255, 255, 0);
+	color: purple;
+	border: none;
+	border-bottom: 3px solid darkgray;
+}
+
+form input::placeholder {
+	color: rgba(128, 0, 128, 0.6);
+}
+
+#js-search {
+	border: none;
+	background-color: rgba(128, 0, 128, 0.7);
+	color: rgba(255, 255, 255, 1);
+	border-radius: 10px;
+	padding: 0.5em 0;
+	transition: background-color .4s;
+}
+
+#js-search:hover, #js-search:active {
+	background-color: rgba(128, 0, 128, 0.95);
+	cursor: pointer;
+}
+
+#js-results {
+	display: flex;
+	flex-direction: column;
+	background-color: rgb(245, 255, 252);
+}
+
+#js-results h2 {
+	text-align: center;
+}
+
+#js-results img {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.result-show {
+	background-color: white;
+	border-radius: 5px;
+	margin: 0 1em 2em;
+}
+
+.result-show:first-child {
+	margin-top: 2em;
+}
+
+.result-show button {
+	border: none;
+	background-color: rgba(128, 0, 128, 0.7);
+	color: rgba(255, 255, 255, 1);
+	display: block;
+	border-radius: 10px;
+	padding: 0.5em 0;
+	transition: background-color .4s;
+	width: 212px;
+	margin: 0.8em auto;
+}
+
+.result-show button:hover, .result-show button:active {
+	background-color: rgba(128, 0, 128, 0.95);
+	cursor: pointer;
+}
+
+.result-show p {
+	margin: 1em 2em;
+}
+
+.result-show p:first-of-type {
+	margin-top: 2em;
+	font-weight: 700;
 }
