@@ -48,6 +48,7 @@ function displaySearchData(data) {
 			.html(noResult)
 			.prop('hidden', false);
 	}
+	scrollToResults();
 }
 
 function renderSearchResults(data) {
@@ -108,11 +109,27 @@ function displayShowData(data) {
 function displayRecsData(data) {
 	const recsArray = data.Similar.Results;
 
+	const recsResults = recsArray.map(show => renderRecResults(show));
+
+	const resultDiv = $('#js-results');
+
+	resultDiv.html(recsResults);
 
 	// this function needs to add the suggested
 	// tv shows to the DOM. it should add the 
 	// name of each show
 
+}
+
+function renderRecResults(show) {
+	return `
+		<section class="result-show">
+			<h2>${ show.Name }</h2>
+			<iframe src="${ show.yUrl }" controls autoplay>
+			</iframe>
+			<a href="${ show.wUrl }" target="_blank"><button type="submit">Read More</button></a>
+		</section>
+	`;
 }
 
 function handleSubmitButton() {
@@ -131,15 +148,12 @@ function handleSubmitButton() {
 		searchField.val('');
 
 		getDataFromTVMaze(endpointURL, userInput, displaySearchData);
-		scrollToResults();
 	});
 }
 
 function handleConfirmButton() {
 	$('#js-results').on('click', '.js-confirm', function(event) {
 		event.preventDefault();
-
-		console.log('handleConfirmButton ran'); // testing
 
 		const endpointURL = 'https://api.tvmaze.com/search/shows';
 
@@ -151,6 +165,7 @@ function handleConfirmButton() {
 		$(this).remove();
 
 		getDataFromTVMaze(endpointURL, userInput, findShowData);
+		scrollToResults();
 	});
 }
 
@@ -166,14 +181,15 @@ function handleRecsButton() {
 	$('#js-results').on('click', '#js-recs', function(event) {
 		event.preventDefault();
 
-		console.log('handleRecsButton ran'); // testing
-
 		const endpointURL = 'https://tastedive.com/api/similar';
 
 		const showName = $(this).siblings('h2');
 		const userInput = showName.text();
-		console.log(userInput);
+		
+		const parentSection = $(this).closest('section');
 
+
+		parentSection.fadeOut(200);
 		getDataFromTasteDive(endpointURL, userInput, displayRecsData);
 	});
 }
