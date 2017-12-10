@@ -71,7 +71,7 @@ function renderSearchResults(data) {
 			<section class="result-show">
 				<h2>${ show.name }</h2>
 				<a href="${ show.officialSite }" target="_blank">
-					<img src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg" alt="${ show.name }">
+					<img src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg" alt="No image.">
 				</a>
 				<button class="js-confirm" type="submit">Is this your show?</button>
 			</section>
@@ -102,7 +102,7 @@ function scrollToResults() {
 function findShowData(data) {
 	if(data[0].show._links.previousepisode) {
 		const endpointHTTP = `${ data[0].show._links.previousepisode.href }`;
-		let URLArray = endpointHTTP.split('');
+		const URLArray = endpointHTTP.split('');
 		URLArray.splice(4, 0, 's');
 
 		const endpointHTTPS = URLArray.join('');
@@ -172,8 +172,6 @@ function renderRecResults(show) {
 function handleSubmitButton() {
 	$('#js-search').click(function(event) {
 		event.preventDefault();
-
-		console.log('handleSubmitButton ran'); // testing
 
 		$('#js-results').removeClass('flex-direction-column');
 
