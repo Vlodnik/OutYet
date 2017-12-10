@@ -35,7 +35,7 @@ function displaySearchData(data) {
 		<section class="result-show">
 			<h2>We couldn't find that show...</h2>
 			<img alt="Ben from Parks & Rec shrugging." src="https://media1.tenor.com/images/cb6500ab807240b061b9f1211a8751ab/tenor.gif?itemid=5743623">
-			<button id="js-retry" type="submit">Try again.</button>
+			<button class="js-retry" type="submit">Try again.</button>
 		</section>
 	`;
 
@@ -48,6 +48,8 @@ function displaySearchData(data) {
 			.html(noResult)
 			.prop('hidden', false);
 	}
+	addBottomMargin();
+	revealFooter();
 	scrollToResults();
 }
 
@@ -77,18 +79,46 @@ function renderSearchResults(data) {
 	}
 }
 
+function addBottomMargin() {
+	$('header').addClass('bottom-margin');
+}
+
+function removeBottomMargin() {
+	$('header').removeClass('bottom-margin');
+}
+
+function revealFooter() {
+	$('footer').removeAttr('hidden');
+}
+
+function hideFooter() {
+	$('footer').attr('hidden', true);
+}
+
 function scrollToResults() {
 	$('html').animate({scrollTop: $('#js-results').offset().top});
 }
 
 function findShowData(data) {
-	const endpointHTTP = `${ data[0].show._links.previousepisode.href }`;
-	let URLArray = endpointHTTP.split('');
-	URLArray.splice(4, 0, 's');
+	if(data[0].show._links.previousepisode) {
+		const endpointHTTP = `${ data[0].show._links.previousepisode.href }`;
+		let URLArray = endpointHTTP.split('');
+		URLArray.splice(4, 0, 's');
 
-	const endpointHTTPS = URLArray.join('');
+		const endpointHTTPS = URLArray.join('');
 
-	$.getJSON(endpointHTTPS, displayShowData);
+		$.getJSON(endpointHTTPS, displayShowData);
+	} else {
+		const resultsSection = $('.result-show');
+
+		const noEpisodes = `
+			<p>There aren't any episodes yet!</p>
+			<p>This show is probably in development.</p>
+			<button type="submit" class="js-retry">Search again?</button>
+		`;
+
+		resultsSection.append(noEpisodes);
+	}
 }
 
 function displayShowData(data) {
@@ -113,19 +143,26 @@ function displayRecsData(data) {
 
 	const resultDiv = $('#js-results');
 
-	resultDiv.html(recsResults);
+	const noRecs = `
+		<section class="result-show">
+			<h2>Uh Oh!</h2>
+			<p>We couldn't find any recommendations.</p>
+			<button type="submit" class="js-retry">Search again?</button>
+		</section>
+	`;
 
-	// this function needs to add the suggested
-	// tv shows to the DOM. it should add the 
-	// name of each show
-
+	if(recsResults.length) {
+		resultDiv.html(recsResults);
+	} else {
+		resultDiv.html(noRecs);
+	}
 }
 
 function renderRecResults(show) {
 	return `
 		<section class="result-show">
 			<h2>${ show.Name }</h2>
-			<iframe src="${ show.yUrl }" controls autoplay>
+			<iframe src="${ show.yUrl }" controls title="${ show.Name } trailer">
 			</iframe>
 			<a href="${ show.wUrl }" target="_blank"><button type="submit">Read More</button></a>
 		</section>
@@ -148,6 +185,7 @@ function handleSubmitButton() {
 		searchField.val('');
 
 		getDataFromTVMaze(endpointURL, userInput, displaySearchData);
+		addBottomMargin();
 	});
 }
 
@@ -165,15 +203,17 @@ function handleConfirmButton() {
 		$(this).remove();
 
 		getDataFromTVMaze(endpointURL, userInput, findShowData);
-		scrollToResults();
 	});
 }
 
 function handleRetryButton() {
-	$('#js-results').on('click', '#js-retry', function(event) {
+	$('#js-results').on('click', '.js-retry', function(event) {
 		event.preventDefault();
 
 		$('#js-results').html('');
+
+		hideFooter();
+		removeBottomMargin();
 	});
 }
 
@@ -194,7 +234,7 @@ function handleRecsButton() {
 	});
 }
 
-const searchEx = ['Brooklyn 99', 'The Americans', 'Last Week Tonight', 'Game of Thrones', 'RuPaul\'s Drag Race', 'The Flash', 'Insecure', 'Black Mirror', 'The Good Place', 'Bob\'s Burgers'];
+const searchEx = ['Brooklyn 99', 'The Walking Dead', 'The Americans', 'Last Week Tonight', 'Game of Thrones', 'RuPaul\'s Drag Race', 'The Flash', 'Insecure', 'Black Mirror', 'The Good Place', 'Bob\'s Burgers'];
 setInterval(function() {
 	if('js-input' !== document.activeElement.id) {
 		$('#js-input').attr('placeholder', searchEx[searchEx.push(searchEx.shift())-1]);

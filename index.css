@@ -1,15 +1,15 @@
+html {
+	background-color: rgb(245, 255, 252);
+}
+
 html body * {
 	box-sizing: border-box;
 	font-family: Montserrat;
+	/*border: 1px solid red;*/
 }
 
-#js-results {
-	display: flex;
-}
-
-.result-show {
-	display: flex;
-	flex-direction: column;
+header, #js-results {
+	min-width: 280px;
 }
 
 header {
@@ -27,6 +27,10 @@ header {
 	padding-right: 2em;
 }
 
+.bottom-margin {
+	margin-bottom: 2em;
+}
+
 form {
 	display: flex;
 	flex-direction: column;
@@ -38,7 +42,8 @@ form {
 h1 {
 	font-weight: 400;
 	margin-top: 0;
-	padding-top: 2em;
+	margin-left: 0.8em;
+	padding-top: 2.3em;
 	padding-bottom: 0;
 }
 
@@ -73,13 +78,14 @@ form input::placeholder {
 }
 
 #js-search:hover, #js-search:active {
-	background-color: rgba(128, 0, 128, 0.95);
+	background-color: rgba(97, 188, 255, 0.95);
 	cursor: pointer;
 }
 
 #js-results {
 	display: flex;
-	flex-direction: column;
+	flex-wrap: wrap;
+	justify-content: center;
 	background-color: rgb(245, 255, 252);
 }
 
@@ -94,13 +100,13 @@ form input::placeholder {
 }
 
 .result-show {
+	display: flex;
+	flex-direction: column;
 	background-color: white;
+	border: 1px solid lightgrey;
 	border-radius: 5px;
+	padding: 0 2em 1em;
 	margin: 0 1em 2em;
-}
-
-.result-show:first-child {
-	margin-top: 2em;
 }
 
 .result-show button {
@@ -116,7 +122,7 @@ form input::placeholder {
 }
 
 .result-show button:hover, .result-show button:active {
-	background-color: rgba(128, 0, 128, 0.95);
+	background-color: rgba(97, 188, 255, 0.95);
 	cursor: pointer;
 }
 
@@ -131,4 +137,52 @@ form input::placeholder {
 
 a {
 	text-decoration: none;
+}
+
+footer {
+	text-align: center;
+	padding-bottom: 0.5em;
+	background-color: rgb(245, 255, 252);
+}
+
+@media only screen and (min-width: 767px) {
+	header h1 {
+		font-size: 2.5em;
+		padding-top: 1.5em;
+		margin-left: 0.6em;
+	}
+
+	form label, form input, form button {
+		font-size: 2em
+	}
+}
+
+@media only screen and (min-width: 1000px) {
+	header {
+		padding-top: 8em;
+	}
+
+	br {
+		display: none;
+	}
+
+	h1 {
+		text-align: center;
+	}
+
+	form {
+		flex-direction: row;
+		justify-content: center;
+	}
+
+	form label {
+		padding-top: 0.4em;
+		padding-right: 0.4em;
+	}
+
+	#js-search {
+		border-radius: 10px 10px 10px 0;
+		padding-left: 2em;
+		padding-right: 2em;
+	}
 }
