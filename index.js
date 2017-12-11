@@ -239,8 +239,8 @@ function handleRecsButton() {
 	});
 }
 
-// Code for cycling placeholder 
-textconst searchEx = ['Brooklyn 99', 'The Walking Dead', 'The Americans', 'Last Week Tonight', 'Game of Thrones', 'RuPaul\'s Drag Race', 'The Flash', 'Insecure', 'Black Mirror', 'The Good Place', 'Bob\'s Burgers'];
+// Code for cycling placeholder text
+const searchEx = ['Brooklyn 99', 'The Walking Dead', 'The Americans', 'Last Week Tonight', 'Game of Thrones', 'RuPaul\'s Drag Race', 'The Flash', 'Insecure', 'Black Mirror', 'The Good Place', 'Bob\'s Burgers'];
 setInterval(function() {
 	if('js-input' !== document.activeElement.id) {
 		$('#js-input').attr('placeholder', searchEx[searchEx.push(searchEx.shift())-1]);
