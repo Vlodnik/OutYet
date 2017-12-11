@@ -1,13 +1,13 @@
-#<a href="https://vlodnik.github.io/OutYet/" target="_blank">OutYet</a>
+# <a href="https://vlodnik.github.io/OutYet/" target="_blank">OutYet</a>
 
-##Introduction 
+## Introduction 
 OutYet lets you check the latest episodes of your favorite TV shows. Just type in the
 name of the show, confirm the show you were looking for, and you'll be told the name of the latest
 episode, its season and episode number, and the airdate. Then you can get recommendations for other
 shows you might enjoy. The recommendations are provided on new cards with the name of the show, a
 video showing a trailer, and a link to the suggested show's wikipedia page.
 
-##Technologies 
+## Technologies 
 OutYet is an API hack using HTML, CSS, and Javascript/jQuery. It uses AJAX calls to get data from
 two APIs: 
 
@@ -21,7 +21,7 @@ The app is fully responsive to different screen sizes, making use of flexbox sty
 queries to ensure pages display appropriately.
 
 
-##Screenshots
+## Screenshots
 Here are screenshots of the app's landing page, in 
 <a href="https://user-images.githubusercontent.com/33362393/33808155-b417f1d0-ddaf-11e7-83a2-1ed85dadce1f.png" target="_blank">desktop</a> 
 and <a href="https://user-images.githubusercontent.com/33362393/33808161-bd8291ee-ddaf-11e7-8dce-c06c7774617a.png" target="_blank">mobile</a> views.
