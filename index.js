@@ -96,13 +96,18 @@ function hideFooter() {
 }
 
 function scrollToResults() {
-	$('html').animate({scrollTop: $('#js-results').offset().top});
+	$('html, body').animate({scrollTop: $('#js-results').offset().top});
 }
 
 function findShowData(data) {
 	if(data[0].show._links.previousepisode) {
+		// Code to convert HTTP to HTTPS
+		// The TVmaze API always returns HTTP, so we add
+	  // an 's' as the fifth character in the HTTP string 
 		const endpointHTTP = `${ data[0].show._links.previousepisode.href }`;
+
 		const URLArray = endpointHTTP.split('');
+
 		URLArray.splice(4, 0, 's');
 
 		const endpointHTTPS = URLArray.join('');
@@ -134,6 +139,7 @@ function displayShowData(data) {
 	const resultsSection = $('.result-show');
 
 	resultsSection.append(results);
+	scrollToResults();
 }
 
 function displayRecsData(data) {
@@ -156,6 +162,7 @@ function displayRecsData(data) {
 	} else {
 		resultDiv.html(noRecs);
 	}
+	scrollToResults();
 }
 
 function renderRecResults(show) {
@@ -232,6 +239,7 @@ function handleRecsButton() {
 	});
 }
 
+// Code for cycling placeholder text
 const searchEx = ['Brooklyn 99', 'The Walking Dead', 'The Americans', 'Last Week Tonight', 'Game of Thrones', 'RuPaul\'s Drag Race', 'The Flash', 'Insecure', 'Black Mirror', 'The Good Place', 'Bob\'s Burgers'];
 setInterval(function() {
 	if('js-input' !== document.activeElement.id) {

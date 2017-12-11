@@ -12,7 +12,7 @@ header, #js-results {
 }
 
 header {
-	height: -webkit-fill-available;
+	height: 100vh;
 	background:
   linear-gradient(
    to bottom,
@@ -30,6 +30,10 @@ header {
 	margin-bottom: 2em;
 }
 
+#header-content {
+	padding-top: 4em;
+}
+
 form {
 	display: flex;
 	flex-direction: column;
@@ -42,7 +46,6 @@ h1 {
 	font-weight: 400;
 	margin-top: 0;
 	margin-left: 0.8em;
-	padding-top: 2.3em;
 	padding-bottom: 0;
 }
 
@@ -145,7 +148,11 @@ footer {
 }
 
 @media only screen and (min-width: 767px) {
-	header h1 {
+	#header-content {
+		padding-top: 0;
+	}
+
+	#header-content h1 {
 		font-size: 2.5em;
 		padding-top: 1.5em;
 		margin-left: 0.6em;
@@ -156,9 +163,10 @@ footer {
 	}
 }
 
-@media only screen and (min-width: 1000px) {
-	header {
-		padding-top: 8em;
+@media only screen and (min-width: 1080px) {
+	#header-content {
+		padding-top: 0;
+		transform: translate(0, 50%);
 	}
 
 	br {
