@@ -1,264 +1,262 @@
 'use strict'
 
 function getDataFromTVMaze(endpointURL, userInput, callback) {
-	const searchObject = {
-		q: `${ userInput }`
-	};
+  const searchObject = {
+    q: `${ userInput }`
+  };
 
-	$.getJSON(endpointURL, searchObject, callback);
+  $.getJSON(endpointURL, searchObject, callback);
 }
 
 function getDataFromTasteDive(endpointURL, userInput, callback) {
-	const searchObject = {
-		url: endpointURL,
-		jsonp: 'callback',
-		dataType: 'jsonp',
-		data: {
-			k: '292374-OutYet-Q9UHLJJC',
-			q: userInput,
-			type: 'shows',
-			info: 1,
-			limit: 5
-		},
-		success: callback
-	}
+  const searchObject = {
+    url: endpointURL,
+    jsonp: 'callback',
+    dataType: 'jsonp',
+    data: {
+      k: '292374-OutYet-Q9UHLJJC',
+      q: userInput,
+      type: 'shows',
+      info: 1,
+      limit: 5
+    },
+    success: callback
+  }
 
-	$.ajax(searchObject);
+  $.ajax(searchObject);
 }
 
 function displaySearchData(data) {
-	const results = data.map(item => renderSearchResults(item));
+  const results = data.map(item => renderSearchResults(item));
 
-	const resultsDiv = $('#js-results');
+  const resultsDiv = $('#js-results');
 
-	const noResult = `
-		<section class="result-show">
-			<h2>We couldn't find that show...</h2>
-			<img alt="Ben from Parks & Rec shrugging." src="https://media1.tenor.com/images/cb6500ab807240b061b9f1211a8751ab/tenor.gif?itemid=5743623">
-			<button class="js-retry" type="submit">Try again.</button>
-		</section>
-	`;
+  const noResult = `
+    <section class="result-show">
+      <h2>We couldn't find that show...</h2>
+      <img alt="Ben from Parks & Rec shrugging." src="https://media1.tenor.com/images/cb6500ab807240b061b9f1211a8751ab/tenor.gif?itemid=5743623">
+      <button class="js-retry" type="submit">Try again.</button>
+    </section>
+  `;
 
-	if(data.length) {
-		resultsDiv
-			.html(results)
-			.prop('hidden', false);
-	} else {
-		resultsDiv
-			.html(noResult)
-			.prop('hidden', false);
-	}
-	addBottomMargin();
-	revealFooter();
-	scrollToResults();
+  let finalResults = data.length ? results : noResult;
+
+  resultsDiv
+    .html(finalResults)
+    .prop('hidden', false);
+
+  addBottomMargin();
+  revealFooter();
+  scrollToResults();
 }
 
 function renderSearchResults(data) {
-	const show = data.show;
+  const show = data.show;
 
-	if(show.image) {
-		return `
-			<section class="result-show">
-				<h2>${ show.name }</h2>
-				<a href="${ show.officialSite }" target="_blank">
-					<img src="${ show.image.medium }" alt="${ show.name }">
-				</a>
-				<button class="js-confirm" type="submit">Is this your show?</button>
-			</section>
-		`;
-	} else if (show._links.previousepisode) {
-		return `
-			<section class="result-show">
-				<h2>${ show.name }</h2>
-				<a href="${ show.officialSite }" target="_blank">
-					<img src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg" alt="No image.">
-				</a>
-				<button class="js-confirm" type="submit">Is this your show?</button>
-			</section>
-		`;
-	}
+  let src;
+  let name;
+
+  if(show.image) {
+    src = show.image.medium;
+    name = show.name;
+  } else if (show._links.previousepisode) {
+    src = 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg'
+    name = 'No image.'
+  } else {
+    return;
+  }
+
+  return `
+    <section class="result-show">
+      <h2>${ show.name }</h2>
+      <a href="${ show.officialSite }" target="_blank">
+        <img src="${ src }" alt="${ name }">
+      </a>
+      <button class="js-confirm" type="submit">Is this your show?</button>
+    </section>
+  `; 
 }
 
 function addBottomMargin() {
-	$('header').addClass('bottom-margin');
+  $('header').addClass('bottom-margin');
 }
 
 function removeBottomMargin() {
-	$('header').removeClass('bottom-margin');
+  $('header').removeClass('bottom-margin');
 }
 
 function revealFooter() {
-	$('footer').removeAttr('hidden');
+  $('footer').removeAttr('hidden');
 }
 
 function hideFooter() {
-	$('footer').attr('hidden', true);
+  $('footer').attr('hidden', true);
 }
 
 function scrollToResults() {
-	$('html, body').animate({scrollTop: $('#js-results').offset().top});
+  $('html, body').animate({scrollTop: $('#js-results').offset().top});
 }
 
 function findShowData(data) {
-	if(data[0].show._links.previousepisode) {
-		// Code to convert HTTP to HTTPS
-		// The TVmaze API always returns HTTP, so we add
-	  // an 's' as the fifth character in the HTTP string 
-		const endpointHTTP = `${ data[0].show._links.previousepisode.href }`;
+  if(data[0].show._links.previousepisode) {
+    // Code to convert HTTP to HTTPS
+    // The TVmaze API always returns HTTP, so we add
+    // an 's' as the fifth character in the HTTP string 
+    const endpointHTTP = `${ data[0].show._links.previousepisode.href }`;
 
-		const URLArray = endpointHTTP.split('');
+    const URLArray = endpointHTTP.split('');
 
-		URLArray.splice(4, 0, 's');
+    URLArray.splice(4, 0, 's');
 
-		const endpointHTTPS = URLArray.join('');
+    const endpointHTTPS = URLArray.join('');
 
-		$.getJSON(endpointHTTPS, displayShowData);
-	} else {
-		const resultsSection = $('.result-show');
+    $.getJSON(endpointHTTPS, displayShowData);
+  } else {
+    const resultsSection = $('.result-show');
 
-		const noEpisodes = `
-			<p>There aren't any episodes yet!</p>
-			<p>This show is probably in development.</p>
-			<button type="submit" class="js-retry">Search again?</button>
-		`;
+    const noEpisodes = `
+      <p>There aren't any episodes yet!</p>
+      <p>This show is probably in development.</p>
+      <button type="submit" class="js-retry">Search again?</button>
+    `;
 
-		resultsSection.append(noEpisodes);
-	}
+    resultsSection.append(noEpisodes);
+  }
 }
 
 function displayShowData(data) {
-	const {name, number, season, airdate} = data;
+  const {name, number, season, airdate} = data;
 
-	const results = `
-		<p>The last episode was ${ name }!</p>
-		<p>It was episode ${ number } of season ${ season }.</p>
-		<p>It aired ${ airdate }.</p>
-		<button id="js-recs" type="submit">Get recommendations?</button>
-	`;
+  const results = `
+    <p>The last episode was ${ name }!</p>
+    <p>It was episode ${ number } of season ${ season }.</p>
+    <p>It aired ${ airdate }.</p>
+    <button id="js-recs" type="submit">Get recommendations?</button>
+  `;
 
-	const resultsSection = $('.result-show');
+  const resultsSection = $('.result-show');
 
-	resultsSection.append(results);
-	scrollToResults();
+  resultsSection.append(results);
+  scrollToResults();
 }
 
 function displayRecsData(data) {
-	const recsArray = data.Similar.Results;
+  const recsArray = data.Similar.Results;
 
-	const recsResults = recsArray.map(show => renderRecResults(show));
+  const recsResults = recsArray.map(show => renderRecResults(show));
 
-	const resultDiv = $('#js-results');
+  const resultDiv = $('#js-results');
 
-	const noRecs = `
-		<section class="result-show">
-			<h2>Uh Oh!</h2>
-			<p>We couldn't find any recommendations.</p>
-			<button type="submit" class="js-retry">Search again?</button>
-		</section>
-	`;
+  const noRecs = `
+    <section class="result-show">
+      <h2>Uh Oh!</h2>
+      <p>We couldn't find any recommendations.</p>
+      <button type="submit" class="js-retry">Search again?</button>
+    </section>
+  `;
 
-	if(recsResults.length) {
-		resultDiv.html(recsResults);
-	} else {
-		resultDiv.html(noRecs);
-	}
-	scrollToResults();
+  if(recsResults.length) {
+    resultDiv.html(recsResults);
+  } else {
+    resultDiv.html(noRecs);
+  }
+  scrollToResults();
 }
 
 function renderRecResults(show) {
-	return `
-		<section class="result-show">
-			<h2>${ show.Name }</h2>
-			<iframe src="${ show.yUrl }" controls title="${ show.Name } trailer">
-			</iframe>
-			<a href="${ show.wUrl }" target="_blank"><button type="submit">Read More</button></a>
-		</section>
-	`;
+  return `
+    <section class="result-show">
+      <h2>${ show.Name }</h2>
+      <iframe src="${ show.yUrl }" controls title="${ show.Name } trailer">
+      </iframe>
+      <a href="${ show.wUrl }" target="_blank"><button type="submit">Read More</button></a>
+    </section>
+  `;
 }
 
 function handleSubmitButton() {
-	$('#js-search').click(function(event) {
-		event.preventDefault();
+  $('#js-search').click(function(event) {
+    event.preventDefault();
 
-		$('#js-results').removeClass('flex-direction-column');
+    $('#js-results').removeClass('flex-direction-column');
 
-		const endpointURL = 'https://api.tvmaze.com/search/shows';
+    const endpointURL = 'https://api.tvmaze.com/search/shows';
 
-		const searchField = $(this).siblings('#js-input');
-		const userInput = searchField.val();
+    const searchField = $(this).siblings('#js-input');
+    const userInput = searchField.val();
 
-		searchField.val('');
+    searchField.val('');
 
-		getDataFromTVMaze(endpointURL, userInput, displaySearchData);
-		addBottomMargin();
-	});
+    getDataFromTVMaze(endpointURL, userInput, displaySearchData);
+    addBottomMargin();
+  });
 }
 
 function handleConfirmButton() {
-	$('#js-results').on('click', '.js-confirm', function(event) {
-		event.preventDefault();
+  $('#js-results').on('click', '.js-confirm', function(event) {
+    event.preventDefault();
 
-		const endpointURL = 'https://api.tvmaze.com/search/shows';
+    const endpointURL = 'https://api.tvmaze.com/search/shows';
 
-		const userInput = $(this).siblings('h2').text();
+    const userInput = $(this).siblings('h2').text();
 
-		const parentSection = $(this).closest('section');
+    const parentSection = $(this).closest('section');
 
-		parentSection.siblings('section').remove();
-		$(this).remove();
+    parentSection.siblings('section').remove();
+    $(this).remove();
 
-		getDataFromTVMaze(endpointURL, userInput, findShowData);
-	});
+    getDataFromTVMaze(endpointURL, userInput, findShowData);
+  });
 }
 
 function handleRetryButton() {
-	$('#js-results').on('click', '.js-retry', function(event) {
-		event.preventDefault();
+  $('#js-results').on('click', '.js-retry', function(event) {
+    event.preventDefault();
 
-		$('#js-results').html('');
+    $('#js-results').html('');
 
-		hideFooter();
-		removeBottomMargin();
-	});
+    hideFooter();
+    removeBottomMargin();
+  });
 }
 
 function handleRecsButton() {
-	$('#js-results').on('click', '#js-recs', function(event) {
-		event.preventDefault();
+  $('#js-results').on('click', '#js-recs', function(event) {
+    event.preventDefault();
 
-		const endpointURL = 'https://tastedive.com/api/similar';
+    const endpointURL = 'https://tastedive.com/api/similar';
 
-		const showName = $(this).siblings('h2');
-		const userInput = showName.text();
-		
-		const parentSection = $(this).closest('section');
+    const showName = $(this).siblings('h2');
+    const userInput = showName.text();
+    
+    const parentSection = $(this).closest('section');
 
 
-		parentSection.fadeOut(200);
-		getDataFromTasteDive(endpointURL, userInput, displayRecsData);
-	});
+    parentSection.fadeOut(200);
+    getDataFromTasteDive(endpointURL, userInput, displayRecsData);
+  });
 }
 
 // Code for cycling placeholder text
 const searchEx = ['Brooklyn 99', 'The Walking Dead', 'The Americans', 'Last Week Tonight', 'Game of Thrones', 'RuPaul\'s Drag Race', 'The Flash', 'Insecure', 'Black Mirror', 'The Good Place', 'Bob\'s Burgers'];
 setInterval(function() {
-	if('js-input' !== document.activeElement.id) {
-		$('#js-input').attr('placeholder', searchEx[searchEx.push(searchEx.shift())-1]);
-	}
+  if('js-input' !== document.activeElement.id) {
+    $('#js-input').attr('placeholder', searchEx[searchEx.push(searchEx.shift())-1]);
+  }
 }, 3000);
 
 function handlePlaceholderText() {
-	$('#js-input').focus(function(event) {
-		$(this).attr('placeholder', '');
-	});
+  $('#js-input').focus(function(event) {
+    $(this).attr('placeholder', '');
+  });
 }
 
 function handleButtons() {
-	handleSubmitButton();
-	handleConfirmButton();
-	handleRetryButton();
-	handleRecsButton();
-	handlePlaceholderText();
+  handleSubmitButton();
+  handleConfirmButton();
+  handleRetryButton();
+  handleRecsButton();
+  handlePlaceholderText();
 }
 
 handleButtons();
